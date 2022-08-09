@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../assetes/lib/layui-v2.7.6/layui/css/layui.css">
+    <script src="../assetes/lib/jQuery-min.js"></script>
+</head>
+
+<body>
+
+
+    <table id="test" lay-filter="test"></table>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+            <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+        </div>
+    </script>
+
+    <!-- 注意：项目正式环境请勿引用该地址 -->
+    <script src="../assetes/lib/layui-v2.7.6/layui/layui.js"></script>
+
+
+    <script>
+        layui.use('table', function() {
+            var table = layui.table;
+
+            table.render({
+                elem: '#test',
+                url: 'http://192.168.210.91:9527/api/userList',
+                toolbar: '#toolbarDemo',
+                request: {
+                    pageName: 'page' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'limit' //每页数据量的参数名，默认：limit
+                },
+                where: {
+                    roles: 'admin'
+                },
+                page: true, //开启分页
+                cols: [
+                    [{
+                        field: 'username',
+                        width: 200,
+                        title: '用户名'
+                    }, {
+                        field: 'password',
+                        width: 200,
+                        title: '密码',
+                    }]
+                ],
+                response: {
+                    statusName: 'code', //规定数据状态的字段名称，默认：code
+                    statusCode: 1, //规定成功的状态码，默认：0
+                    msgName: 'msg' //规定状态信息的字段名称，默认：msg
+
+                },
+                done: function(res, curr, count) {
+                    //如果是异步请求数据方式，res即为你接口返回的信息。
+                    //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                    // console.log(res);
+
+                    //得到当前页码
+                    // console.log(curr);
+                }
+            });
+            //头工具栏事件
+            table.on('toolbar(test)', function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'add':
+                        layer.msg('添加');
+                        break;
+                    case 'delete':
+                        layer.msg('删除');
+                        break;
+                    case 'update':
+                        layer.msg('编辑');
+                        break;
+                };
+            });
+
+
+
+
+        });
+    </script>
+
+</body>
+
+</html>

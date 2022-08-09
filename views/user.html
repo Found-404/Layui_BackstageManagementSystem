@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户列表</title>
+    <link href="../assetes/lib/layui-v2.7.6/layui/css/layui.css" rel="stylesheet">
+    <script src="../assetes/lib/jQuery-min.js"></script>
+</head>
+
+<body>
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo layui-hide-xs layui-bg-black">后台管理</div>
+            <!-- 头部区域（可配合layui 已有的水平导航） -->
+            <!-- <ul class="layui-nav layui-layout-left">
+                
+                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+                    <i class="layui-icon layui-icon-spread-left"></i>
+                </li>
+
+                <li class="layui-nav-item layui-hide-xs"><a href="">nav 1</a></li>
+                <li class="layui-nav-item layui-hide-xs"><a href="">nav 2</a></li>
+                <li class="layui-nav-item layui-hide-xs"><a href="">nav 3</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">nav groups</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">menu 11</a></dd>
+                        <dd><a href="">menu 22</a></dd>
+                        <dd><a href="">menu 33</a></dd>
+                    </dl>
+                </li>
+            </ul> -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                    <a href="javascript:;">
+                        <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img"> admin
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">用户信息</a></dd>
+                        <dd><a href="">设置</a></dd>
+                        <dd><a href="">退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-more-vertical"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="./index.html">主页</a>
+                        <!-- <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">menu 1</a></dd>
+                            <dd><a href="javascript:;">menu 2</a></dd>
+                            <dd><a href="javascript:;">menu 3</a></dd>
+                            <dd><a href="">the links</a></dd>
+                        </dl> -->
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;">管理页面</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="./commodity.html">商品</a></dd>
+                            <dd class="layui-this"><a href="./user.html">用户</a></dd>
+                        </dl>
+                    </li>
+                    <!-- <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>
+                    <li class="layui-nav-item"><a href="">the links</a></li> -->
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;">
+
+                <table id="test" lay-filter="test"></table>
+
+            </div>
+        </div>
+        <!-- 底部固定区域 -->
+        <!-- <div class="layui-footer">
+         
+
+        </div> -->
+    </div>
+    <script src="../assetes/lib/layui-v2.7.6/layui/layui.js"></script>
+    <script>
+        //JS 
+        layui.use(['element', 'layer', 'util'], function() {
+            var element = layui.element,
+                layer = layui.layer,
+                util = layui.util,
+                $ = layui.$;
+
+            //头部事件
+            util.event('lay-header-event', {
+                //左侧菜单事件
+                menuLeft: function(othis) {
+                    layer.msg('展开左侧菜单的操作', {
+                        icon: 0
+                    });
+                },
+                menuRight: function() {
+                    layer.open({
+                        type: 1,
+                        content: '<div style="padding: 15px;">处理右侧面板的操作</div>',
+                        area: ['260px', '100%'],
+                        offset: 'rt' //右上角
+                            ,
+                        anim: 5,
+                        shadeClose: true
+                    });
+                }
+            });
+
+        });
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        </div>
+    </script>
+    <script>
+        layui.use('table', function() {
+            var table = layui.table;
+
+            table.render({
+                elem: '#test',
+                url: 'http://127.0.0.1:9527/api/userList',
+                toolbar: '#toolbarDemo',
+                request: {
+                    pageName: 'page' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'limit' //每页数据量的参数名，默认：limit
+                },
+                where: {
+                    roles: 'admin'
+                },
+                page: true, //开启分页
+                cols: [
+                    [{
+                        field: 'username',
+                        width: 200,
+                        title: '用户名'
+                    }, {
+                        field: 'password',
+                        width: 200,
+                        title: '密码',
+                    }, {
+                        fixed: 'right',
+                        title: '操作',
+                        width: 125,
+                        minWidth: 125,
+                        toolbar: '#barDemo'
+                    }]
+                ],
+                response: {
+                    statusName: 'code', //规定数据状态的字段名称，默认：code
+                    statusCode: 1, //规定成功的状态码，默认：0
+                    msgName: 'msg' //规定状态信息的字段名称，默认：msg
+
+                },
+                done: function(res, curr, count) {
+                    //如果是异步请求数据方式，res即为你接口返回的信息。
+                    //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                    // console.log(res);
+
+                    //得到当前页码
+                    // console.log(curr);
+                }
+
+            });
+
+
+            //触发单元格工具事件
+            table.on('tool(test)', function(obj) { // 双击 toolDouble
+                var data = obj.data;
+                // console.log(data)
+                if (obj.event === 'del') {
+                    layer.confirm('确定删除？', function(index) {
+                        // 发起删除请求
+                        $.ajax({
+                            type: "GET",
+                            url: "http://127.0.0.1:9527/api/deletuser",
+                            data: {
+                                roles: 'admin',
+                                username: data.username
+                            },
+                            success: function(res) {
+                                // console.log(res);
+                                obj.del();
+                                layer.close(index);
+                            }
+                        });
+                    });
+                    console.log(123);
+                } else if (obj.event === 'edit') {
+                    layer.open({
+                        title: '编辑',
+                        type: 1,
+                        area: ['445px', '204px'],
+                        btn: ['确定', '取消'],
+                        content: `<div style="padding: 16px;">
+                            <div class="layui-form-item">
+                                    <label class="layui-form-label" style="padding:9px 0px;">修改密码</label>
+                                    <div class="layui-input-block">
+                                    <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入新密码" class="layui-input">
+                                    </div>
+                                </div>            
+                            </div>
+                            `,
+                        yes: function(index, layero) {
+                            // 发起改变密码的请求
+                            $.ajax({
+                                type: "GET",
+                                url: "http://127.0.0.1:9527/api/updateUser",
+                                data: {
+                                    username: data.username,
+                                    newPsd: layero.find('.layui-input').val(),
+                                },
+                                success: function(res) {
+                                    if (res.code == 1) {
+                                        layer.close(index);
+                                        window.location.reload()
+                                    }
+                                }
+                            });
+
+                        },
+                        btn2: function(index, layero) {
+                            layer.close(index);
+                        }
+                    });
+                };
+            });
+
+
+
+            //头工具栏事件
+            table.on('toolbar(test)', function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'add':
+                        layer.open({
+                            title: '编辑',
+                            type: 1,
+                            area: ['465px', '258px'],
+                            btn: ['确定', '取消'],
+                            content: `<div style="padding: 16px;">
+                                <div class="layui-form-item">
+                                        <label class="layui-form-label" style="padding:9px 0px;">用户名</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入新的用户名" class="layui-input postUser">
+                                        </div>
+                                 </div>
+                                 <div class="layui-form-item">
+                                        <label class="layui-form-label" style="padding:9px 0px;">密码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入密码" class="layui-input postPwd">
+                                        </div>
+                                 </div>             
+                            </div>
+                            `,
+                            yes: function(index, layero) {
+                                // 发起添加用户的ajax
+                                console.log(layero.find('.postUser').val());
+                                console.log(layero.find('.postPwd').val());
+                                $.ajax({
+                                    type: "GET",
+                                    url: "http://127.0.0.1:9527/api/addUser",
+                                    data: {
+                                        role: 'admin',
+                                        username: layero.find('.postUser').val(),
+                                        password: layero.find('.postPwd').val(),
+                                    },
+                                    success: function(res) {
+                                        if (res.code == 1) {
+                                            layer.close(index);
+                                            window.location.reload()
+                                        }
+                                    }
+                                });
+
+                            },
+                            btn2: function(index, layero) {
+                                layer.close(index);
+                            }
+                        });
+                        break;
+                };
+            });
+
+
+
+
+
+
+
+
+        });
+    </script>
+</body>
+
+</html>
